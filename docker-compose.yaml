@@ -1,0 +1,40 @@
+version: "3"
+services: 
+  hub:
+    image: selenium/hub:3.141.59-gold
+    ports: 
+      - "4444:4444"
+  chrome:
+    image: selenium/node-chrome:3.141.59-gold
+    depends_on: 
+      - hub
+    environment:
+      - HUB_HOST=hub
+  firefox:
+    image: selenium/node-firefox:3.141.59-gold
+    depends_on:
+      - hub
+    environment:
+      - HUB_HOST=hub
+  cars-chrome:
+    image: carsimage
+    depends_on:
+      - chrome
+      - firefox
+    environment:
+      - HUB_HOST=hub
+      - BROWSER=chrome
+      - MODULE=testsuite.xml
+    volumes:
+      - ./chrome-results/cars-chrome:/usr/share/project/test-output
+  cars-firefox:
+    image: carsimage
+    depends_on:
+      - chrome
+      - firefox
+    environment:
+      - HUB_HOST=hub
+      - BROWSER=firefox
+      - MODULE=testsuite.xml
+    volumes:
+      - ./firefox-results/cars-firefox:/usr/share/project/test-output

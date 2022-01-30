@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+env=${1:-chrome}
+
+mvn clean
+echo "Running tests..."
+mvn test -DBROWSER=$env
+mvn clean
+
+open index.html
